@@ -17,6 +17,7 @@ function App() {
         >
           Learn React
         </a>
+        <button href="/generate">GENERIRAJ</button>
       </header>
     </div>
   );
