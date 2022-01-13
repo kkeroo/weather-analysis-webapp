@@ -3,6 +3,6 @@ var mainCtrl = require('../controllers/MainController');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', mainCtrl.generirajDatoteko);
+router.post('/generiraj_datoteko', mainCtrl.generirajDatoteko);
 
 module.exports = router;

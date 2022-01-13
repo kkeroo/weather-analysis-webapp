@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 function App() {
 
@@ -10,6 +11,11 @@ function App() {
   const generirajDatoteko = (event) => {
     event.preventDefault();
     console.log(datoteka);
+    axios.post('http://localhost:4000/generiraj_datoteko', datoteka).then((response) => {
+      console.log("uspesno");
+    }).catch((napaka) => {
+      console.log("napaka");
+    });
   };
 
   const obdelajSprememboDatoteke = (e) => {
