@@ -10,8 +10,9 @@ function App() {
 
   const generirajDatoteko = (event) => {
     event.preventDefault();
-    console.log(datoteka);
-    axios.post('http://localhost:4000/generiraj_datoteko', datoteka).then((response) => {
+    let formData = new FormData();
+    formData.append('datoteka', datoteka.podatki);
+    axios.post('http://localhost:5000/', formData).then((response) => {
       console.log("uspesno");
     }).catch((napaka) => {
       console.log("napaka");
@@ -19,7 +20,7 @@ function App() {
   };
 
   const obdelajSprememboDatoteke = (e) => {
-    nastaviDatoteko({ime: e.target.files[0].name, podatki: e.target.files[0], });
+    nastaviDatoteko({ime: e.target.files[0].name, podatki: e.target.files[0] });
   }
   return (
     <div className="App">
