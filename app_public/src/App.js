@@ -1,7 +1,20 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react';
+import ReactDOM from 'react-dom';
 
 function App() {
+
+  const [datoteka, nastaviDatoteko] =  useState({ime: '', podatki: ''});
+
+  const generirajDatoteko = (event) => {
+    event.preventDefault();
+    console.log(datoteka);
+  };
+
+  const obdelajSprememboDatoteke = (e) => {
+    nastaviDatoteko({ime: e.target.files[0].name, podatki: e.target.files[0], });
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -17,8 +30,13 @@ function App() {
         >
           Learn React
         </a>
-        <button href="/generate">GENERIRAJ</button>
       </header>
+      <body>
+        <form onSubmit={generirajDatoteko}>
+          <input type="file" name={datoteka} onChange={obdelajSprememboDatoteke} />
+          <input type="submit" value="GENERATE"/>
+        </form>
+      </body>
     </div>
   );
 }
