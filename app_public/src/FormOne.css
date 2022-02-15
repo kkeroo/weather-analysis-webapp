@@ -1,0 +1,17 @@
+h1 {
+    padding-top: 30vh;
+    color: white;
+    transition: padding-top 2s;
+}
+
+.file-input {
+    margin-top: 1.2em;
+}
+
+.next-button {
+    margin-top: 1.1em;
+}
+
+h1:hover {
+    padding-top: 10vh;
+}

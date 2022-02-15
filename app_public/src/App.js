@@ -26,9 +26,9 @@ function App() {
   }
   return (
     <div className="App">
-      <Header></Header>
-      <FormContainer></FormContainer>
       <body>
+        <Header></Header>
+        <FormContainer></FormContainer>
         <form onSubmit={generirajDatoteko}>
           <input type="file" name={datoteka} onChange={obdelajSprememboDatoteke} />
           <input type="submit" value="GENERATE"/>
