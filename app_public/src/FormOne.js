@@ -13,15 +13,15 @@ const FormOne = () => {
                     <h1>Najprej naložite datoteko.</h1>
                 </Row>
                 <Row>
-                    <Col></Col>
-                    <Col>
+                    <Col sm='4'></Col>
+                    <Col sm='4'>
                         <Form className='file-input'>
                             <Form.Group controlId="formFile" className="mb-2">
                                 <Form.Control type="file" />
                             </Form.Group>
                         </Form>
                     </Col>
-                    <Col></Col>
+                    <Col sm='4'></Col>
                 </Row>
                 <Row>
                     <Container>
