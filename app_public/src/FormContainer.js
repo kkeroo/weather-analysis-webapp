@@ -1,6 +1,7 @@
 import './FormContainer.css';
 import FormOne from './FormOne';
-import FormTwo from './FormTwo'
+import FormTwo from './FormTwo';
+import FromThree from './FormThree';
 import Container from 'react-bootstrap/Container';
 
 const FormContainer = () => {
@@ -9,6 +10,7 @@ const FormContainer = () => {
             <Container fluid className="summary-block">
                 <FormOne></FormOne>
                 <FormTwo></FormTwo>
+                <FromThree></FromThree>
             </Container>
         </div>
     );

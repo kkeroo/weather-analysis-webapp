@@ -15,10 +15,10 @@ const FormOne = () => {
                     <h1>Določite ime generirane datoteke in izberite željene datume.</h1>
                 </Row>
                 <Row>
-                    <Col sm='4'></Col>
-                    <Col sm='4'>
+                    <Col sm='3' lg='4'></Col>
+                    <Col sm='6' lg='4'>
                         <Container>
-                            <Form className='file-input'>
+                            <Form>
                                 <Form.Group controlId="formFile" className="mb-2">
                                     <Form.Label className="text-light">Ime datoteke</Form.Label>
                                     <Form.Control type="text" placeholder='Vnesite ime  datoteke' />
@@ -26,11 +26,11 @@ const FormOne = () => {
                             </Form>
                         </Container>
                     </Col>
-                    <Col sm='4'></Col>
+                    <Col sm='3' lg='4'></Col>
                 </Row>
                 <Row>
-                    <Col sm='4'></Col>
-                    <Col sm='4'>
+                    <Col sm='3' lg='4'></Col>
+                    <Col sm='6' lg='4'>
                         <Container className="mt-3">
                             <Form.Label className="text-light">Obdobje</Form.Label>
                             <DateRangePicker
@@ -40,7 +40,7 @@ const FormOne = () => {
                             </DateRangePicker>
                         </Container>
                     </Col>
-                    <Col sm='4'></Col>
+                    <Col sm='3' lg='4'></Col>
                 </Row>
                 <Row>
                     <Container>
