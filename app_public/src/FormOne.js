@@ -4,8 +4,9 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './FormOne.css';
+import { useState } from 'react';
 
-const FormOne = () => {
+const FormOne = ({ formData, setFormData, validPage }) => {
     return (
         <div className='form'>
             <Container>
@@ -17,17 +18,11 @@ const FormOne = () => {
                     <Col sm='6' lg='4'>
                         <Form className='file-input'>
                             <Form.Group controlId="formFile" className="mb-2">
-                                <Form.Control type="file" />
+                                <Form.Control type="file" onChange={(e) => setFormData({...formData, fileData: e.target.files[0]})}/>
                             </Form.Group>
                         </Form>
                     </Col>
                     <Col sm='3' lg='4'></Col>
-                </Row>
-                <Row>
-                    <Container>
-                        <Button className='next-button' variant='primary'>Naprej</Button>
-                    </Container>
-
                 </Row>
             </Container>
         </div>
