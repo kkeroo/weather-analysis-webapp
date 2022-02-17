@@ -15,6 +15,8 @@ const FormContainer = () => {
         fileName: '',
         startDate: '01/01/2021',
         endDate: '01/02/2021',
+        minDate: '01/01/21',
+        maxDate: '01/12/21',
         baseTemperature: 10,
         rainGraph: '',
         temperatureGraph: '',

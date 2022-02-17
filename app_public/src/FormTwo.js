@@ -10,11 +10,12 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 const FormOne = ({ formData, setFormData }) => {
 
     const handleApply = (e, picker) => {
+        console.log(picker)
         setFormData({...formData, startDate: convertMomentDateToString(picker.startDate), endDate: convertMomentDateToString(picker.endDate)});
     };
 
     const convertMomentDateToString = (momentDate) => {
-        return momentDate.format('MM/DD/YYYY');
+        return momentDate.format('MM/DD/YY');
     };
 
     return (
@@ -43,7 +44,7 @@ const FormOne = ({ formData, setFormData }) => {
                         <Container className="mt-3">
                             <Form.Label className="text-light">Obdobje</Form.Label>
                             <DateRangePicker
-                                initialSettings={{ startDate: formData.startDate, endDate: formData.endDate }}
+                                initialSettings={{ minDate:formData.minDate, maxDate:formData.maxDate, drops:"auto", opens:"auto", startDate: formData.startDate, endDate: formData.endDate }}
                                 onApply={handleApply}
                                 >
                                 <input type="text" className="form-control" />
