@@ -1,3 +1,5 @@
+from os import environ
+import os
 import flask
 from flask.json import jsonify
 from flask_cors import CORS
@@ -5,13 +7,17 @@ from flask import request, send_file,render_template, send_from_directory
 import pandas as pd
 from generator import generate_excel_file
 
-app = flask.Flask(__name__, static_url_path='', static_folder='app_public/build', template_folder='app_public/build')
+app = flask.Flask(__name__, static_url_path='/', static_folder='./app_public/build')
 #app.config["DEBUG"] = True
 #CORS(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 @app.route('/get', methods=["GET"])
 def get():
@@ -36,4 +42,5 @@ def generiraj():
     return fileName
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, port=os.environ.get('PORT', 80))
+    #app.run()
