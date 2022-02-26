@@ -9,10 +9,9 @@ app = flask.Flask(__name__, static_url_path='', static_folder='app_public/build'
 #app.config["DEBUG"] = True
 #CORS(app)
 
-@app.route('/', defaults={'path': ''})
-def index(path):
-    return 'hi'
-    #return send_from_directory(app.static_folder, 'index.html')
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/get', methods=["GET"])
 def get():
