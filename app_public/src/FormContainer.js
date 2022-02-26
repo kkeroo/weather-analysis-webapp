@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import { useState } from 'react';
+import axios from 'axios';
 
 const FormContainer = () => {
  
@@ -19,10 +20,10 @@ const FormContainer = () => {
         minDate: '01/01/21',
         maxDate: '01/12/21',
         baseTemperature: 10,
-        rainGraph: '',
-        temperatureGraph: '',
-        monthlyData: '',
-        dailyData: ''
+        rainGraph: false,
+        temperatureGraph: false,
+        monthlyData: false,
+        dailyData: false
     });
 
     const validFirstPage = () => {
@@ -65,6 +66,37 @@ const FormContainer = () => {
         }
     };
 
+    const generateFile = () => {
+        let reqData = new FormData();
+        reqData.append('fileData', formData.fileData);
+        reqData.append('fileName', formData.fileName);
+        reqData.append('startDate', formData.startDate);
+        reqData.append('endDate', formData.endDate);
+        reqData.append('baseTemperature', formData.baseTemperature);
+        reqData.append('rainGraph', formData.rainGraph);
+        reqData.append('temperatureGraph', formData.temperatureGraph);
+        reqData.append('dailyData', formData.dailyData);
+        reqData.append('monthlyData', formData.monthlyData);
+
+        axios.post('http://localhost:5000/generate', reqData).then((response) => {
+            let newFileName = response.data;
+            axios({
+                url: 'http://localhost:5000/get',
+                method: 'GET',
+                responseType: 'blob', // important
+              }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', newFileName + '.xlsx');
+                document.body.appendChild(link);
+                link.click();
+              });
+        }).catch((napaka) => {
+            console.log("napaka");
+        });
+    }
+
     const FormDisplay = () => {
         switch (page) {
             case 0: {
@@ -88,7 +120,7 @@ const FormContainer = () => {
                         <Button className='next-button me-2' hidden={page < 2} onClick={previousPage} variant='danger'>Nazaj</Button>
                         <Button className='next-button me-2' hidden={page != 0} onClick={start} variant='primary'>Začni</Button>
                         <Button className='next-button ms-2' hidden={page == 2 || page == 0} onClick={nextPage} variant='primary'>Naprej</Button>
-                        <Button className='next-button ms-2' hidden={page != 2} variant='primary'>Generiraj</Button>
+                        <Button className='next-button ms-2' hidden={page != 2} onClick={generateFile} variant='primary'>Generiraj</Button>
                     </Container>
                 </Row>
             </Container>
