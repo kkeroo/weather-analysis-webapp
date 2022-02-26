@@ -78,10 +78,10 @@ const FormContainer = () => {
         reqData.append('dailyData', formData.dailyData);
         reqData.append('monthlyData', formData.monthlyData);
 
-        axios.post('http://localhost:5000/generate', reqData).then((response) => {
+        axios.post('https://vremenska-analiza.herokuapp.com/generate', reqData).then((response) => {
             let newFileName = response.data;
             axios({
-                url: 'http://localhost:5000/get',
+                url: 'https://vremenska-analiza.herokuapp.com/get',
                 method: 'GET',
                 responseType: 'blob', // important
               }).then((response) => {
