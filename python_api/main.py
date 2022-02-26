@@ -6,8 +6,8 @@ import pandas as pd
 from generator import generate_excel_file
 
 app = flask.Flask(__name__, static_url_path='', static_folder='../app_public/build')
-app.config["DEBUG"] = True
-CORS(app)
+#app.config["DEBUG"] = True
+#CORS(app)
 
 @app.route('/', defaults={'path': ''})
 def index(path):
