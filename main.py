@@ -11,7 +11,8 @@ app = flask.Flask(__name__, static_url_path='', static_folder='app_public/build'
 
 @app.route('/', defaults={'path': ''})
 def index(path):
-    return send_from_directory(app.static_folder, 'index.html')
+    return 'hi'
+    #return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/get', methods=["GET"])
 def get():
