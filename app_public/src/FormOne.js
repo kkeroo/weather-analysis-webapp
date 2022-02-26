@@ -5,9 +5,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './FormOne.css';
 
-const FormOne = ({ formData, setFormData }) => {
+const FormOne = ({ formData, setFormData, validFirstPage }) => {
     
     let fileReader;
+    let uploadedFile;
 
     const handleFileRead = (e) => {
         const content = fileReader.result;
@@ -15,6 +16,7 @@ const FormOne = ({ formData, setFormData }) => {
         let firstDataRow = fileContentArray[1];
         let firstDate = firstDataRow.split(/;/)[0];
         firstDate = firstDate.split(/\s/)[0];
+
         // firstDate[0] = day, firstDate[1] = month, firstDate[2] = year
         firstDate = firstDate.split(/\./);
         
@@ -26,14 +28,14 @@ const FormOne = ({ formData, setFormData }) => {
         let firstDateString = firstDate[1] + '/' + firstDate[0] + '/' + firstDate[2];
         let lastDateString = lastDate[1] + '/' + lastDate[0] + '/' + lastDate[2];
         
-        setFormData({...formData, minDate: firstDateString, maxDate: lastDateString, startDate: firstDateString, endDate:lastDateString});
+        setFormData({...formData,fileData: uploadedFile, minDate: firstDateString, maxDate: lastDateString, startDate: firstDateString, endDate:lastDateString});
     }
 
     const handleFileChange = (e) => {
+        uploadedFile = e.target.files[0];
         fileReader = new FileReader();
         fileReader.onloadend = handleFileRead;
-        fileReader.readAsText(e.target.files[0]);
-        setFormData({...formData, fileData: e.target.files[0]});
+        fileReader.readAsText(uploadedFile);
     }
     
     return (
@@ -47,7 +49,7 @@ const FormOne = ({ formData, setFormData }) => {
                     <Col sm='6' lg='4'>
                         <Form className='file-input'>
                             <Form.Group controlId="formFile" className="mb-2">
-                                <Form.Control type="file" onChange={handleFileChange}/>
+                                <Form.Control type="file" accept=".csv" onChange={handleFileChange}/>
                             </Form.Group>
                         </Form>
                     </Col>

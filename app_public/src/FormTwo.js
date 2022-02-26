@@ -18,6 +18,13 @@ const FormOne = ({ formData, setFormData }) => {
         return momentDate.format('MM/DD/YY');
     };
 
+    const validFileName = () => {
+        if (formData.fileName == '') return false;
+        let re = /^[\w-]+$/;
+        if (re.test(formData.fileName)) return true;
+        return false;
+    };
+
     return (
         <div className='form'>
             <Container>
@@ -31,7 +38,7 @@ const FormOne = ({ formData, setFormData }) => {
                             <Form>
                                 <Form.Group controlId="formFile" className="mb-2">
                                     <Form.Label className="text-light">Ime datoteke</Form.Label>
-                                    <Form.Control type="text" placeholder='Vnesite ime  datoteke' value={formData.fileName} onChange={(e) => setFormData({...formData, fileName: e.target.value})}/>
+                                    <Form.Control type="text" placeholder='Vnesite ime  datoteke' isInvalid={!validFileName()} value={formData.fileName} onChange={(e) => setFormData({...formData, fileName: e.target.value})}/>
                                 </Form.Group>
                             </Form>
                         </Container>
