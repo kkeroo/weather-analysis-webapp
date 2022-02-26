@@ -1,17 +1,17 @@
 import flask
 from flask.json import jsonify
 from flask_cors import CORS
-from flask import request, send_file, send_from_directory
+from flask import request, send_file,render_template, send_from_directory
 import pandas as pd
 from generator import generate_excel_file
 
-app = flask.Flask(__name__, static_url_path='', static_folder='app_public/build')
+app = flask.Flask(__name__, static_url_path='', static_folder='app_public/build', template_folder='app_public/build')
 #app.config["DEBUG"] = True
 #CORS(app)
 
 @app.route('/')
 def index():
-    return send_from_directory(app.static_folder, 'index.html')
+    return render_template('index.html')
 
 @app.route('/get', methods=["GET"])
 def get():
