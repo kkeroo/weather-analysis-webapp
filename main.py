@@ -5,7 +5,7 @@ from flask import request, send_file, send_from_directory
 import pandas as pd
 from generator import generate_excel_file
 
-app = flask.Flask(__name__, static_url_path='', static_folder='../app_public/build')
+app = flask.Flask(__name__, static_url_path='', static_folder='app_public/build')
 #app.config["DEBUG"] = True
 #CORS(app)
 
