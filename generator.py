@@ -333,9 +333,9 @@ def crop_date_range(dataframe, start_date, end_date):
 
     return df
     
-def generate_excel_file(filename, start_date, end_date, base_temp, tempGraph, rainGraph, dailyData, monthlyData):
-    dataframe = pd.read_csv(filename, sep=";")
-    
+def generate_excel_file(filename, generated_file_name, start_date, end_date, base_temp, tempGraph, rainGraph, dailyData, monthlyData):
+    #dataframe = pd.read_csv(filename, sep=";")
+    dataframe = filename
     # Timestamp
     timestamp_col = dataframe.iloc[:, 1]
     date_list = list()
@@ -402,5 +402,5 @@ def generate_excel_file(filename, start_date, end_date, base_temp, tempGraph, ra
             ws = wb.create_sheet('Dnevi-{}'.format(year))
             write_data_to_ws(daily_df, ws, year, 'daily', gdd, base_temp, tempGraph, rainGraph)
 
-    wb.save('file.xlsx')
+    wb.save(f'{generated_file_name}.xlsx')
 

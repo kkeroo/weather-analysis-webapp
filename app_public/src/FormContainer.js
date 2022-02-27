@@ -10,6 +10,8 @@ import axios from 'axios';
 
 const FormContainer = () => {
  
+    const baseURL = 'http://localhost:5000'
+
     const [page, setPage] =  useState(0);
     const [formData, setFormData] = useState({
         fileData: '',
@@ -66,6 +68,32 @@ const FormContainer = () => {
         }
     };
 
+    const donwloadTheFile = (fileId, newFileName) => {
+        axios({
+            url: baseURL+'/get',
+            method: 'GET',
+            params: { 'fileId': fileId },
+            responseType: 'blob', // important
+        }).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', newFileName + '.xlsx');
+            document.body.appendChild(link);
+            link.click();
+        });
+    };
+    /*
+    const checkForFile = (generatedFileName, newFileName) => {
+        axios.get(baseURL+'/check', { params: { fileId: generatedFileName } }).then(response =>  {
+            console.log(response.data);
+            if (response.data == true){
+                donwloadTheFile(generatedFileName, newFileName);
+                clearInterval(intervalId);
+            }
+        });
+    };*/
+
     const generateFile = () => {
         let reqData = new FormData();
         reqData.append('fileData', formData.fileData);
@@ -78,10 +106,24 @@ const FormContainer = () => {
         reqData.append('dailyData', formData.dailyData);
         reqData.append('monthlyData', formData.monthlyData);
 
-        axios.post('https://vremenska-analiza.herokuapp.com/generate', reqData).then((response) => {
-            let newFileName = response.data;
-            axios({
-                url: 'https://vremenska-analiza.herokuapp.com/get',
+        axios.post(baseURL+'/generate', reqData).then((response) => {
+            let newFileName = response.data[0];
+            let generatedFileName = response.data[2];
+            console.log(response);
+            
+            let intervalId = setInterval(checkForFile, 2000);
+
+            function checkForFile() {
+                axios.get(baseURL+'/check', { params: { fileId: generatedFileName } }).then(response =>  {
+                    console.log(response.data);
+                    if (response.data == true){
+                        donwloadTheFile(generatedFileName, newFileName);
+                        clearInterval(intervalId);
+                    }
+                });
+            }
+            /*axios({
+                url: baseURL+'/get',
                 method: 'GET',
                 responseType: 'blob', // important
               }).then((response) => {
@@ -91,7 +133,7 @@ const FormContainer = () => {
                 link.setAttribute('download', newFileName + '.xlsx');
                 document.body.appendChild(link);
                 link.click();
-              });
+              });*/
         }).catch((napaka) => {
             console.log("napaka");
         });
