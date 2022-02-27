@@ -29,6 +29,8 @@ const FormContainer = () => {
         dailyData: false
     });
 
+    const [click, setClick] =  useState(false);
+
     const validFirstPage = () => {
         if (formData.fileData != ''){
             return true;
@@ -82,6 +84,7 @@ const FormContainer = () => {
             link.setAttribute('download', newFileName + '.xlsx');
             document.body.appendChild(link);
             link.click();
+            setClick(false);
         });
     };
     /*
@@ -96,6 +99,7 @@ const FormContainer = () => {
     };*/
 
     const generateFile = () => {
+        setClick(true);
         let reqData = new FormData();
         reqData.append('fileData', formData.fileData);
         reqData.append('fileName', formData.fileName);
@@ -164,7 +168,7 @@ const FormContainer = () => {
                         <Button className='next-button me-2' hidden={page < 2} onClick={previousPage} variant='danger'>Nazaj</Button>
                         <Button className='next-button me-2' hidden={page != 0} onClick={start} variant='primary'>Začni</Button>
                         <Button className='next-button ms-2' hidden={page == 2 || page == 0} onClick={nextPage} variant='primary'>Naprej</Button>
-                        <Button className='next-button ms-2' hidden={page != 2} onClick={generateFile} variant='primary'>Generiraj</Button>
+                        <Button className='next-button ms-2' hidden={page != 2} onClick={generateFile} disabled={click == true} variant='primary'>Generiraj</Button>
                     </Container>
                 </Row>
             </Container>
