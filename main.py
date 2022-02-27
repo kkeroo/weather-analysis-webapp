@@ -5,7 +5,7 @@ from flask.json import jsonify
 from flask_cors import CORS
 from flask import request, send_file,render_template, send_from_directory
 import pandas as pd
-from generator import generate_excel_file
+from generator import generate_excel_file, generated_files
 import threading
 import pandas as pd
 
@@ -26,16 +26,23 @@ def not_found(e):
 @app.route('/check', methods=["GET"])
 def check():
     fileId = request.args.get('fileId')
-    if os.path.exists('./{}.xlsx'.format(fileId)):
+    threadId = request.args.get('threadId')
+    if (len(generated_files) > 0):
         return jsonify(True)
+
     return jsonify(False)
 
 @app.route('/get', methods=["GET"])
 def get():
     fileId = request.args.get('fileId')
-    return send_file('{}.xlsx'.format(fileId))
+    #return send_file('{}.xlsx'.format(fileId))
+    #return send_file(generated_files[0])
+    gf = generated_files[0]
+    generated_files.remove(gf)
+    return flask.Response(gf, content_type='application/vnd.ms-excel')
 
 file_counter = 0
+editing_file = False
 @app.route('/generate', methods=["POST"])
 def generiraj():
     fileData = request.files['fileData']
@@ -59,7 +66,7 @@ def generiraj():
     #generate_excel_file(datoteka, startDate, endDate, int(baseTemp), tempGraph, rainGraph, dailyData, monthlyData)
     threads.append(thread)
     #exfile = df.to_csv('file.csv')
-    print(f"Thread is alive: {thread.is_alive}")
+    print(f"Thread is alive: {thread.is_alive()}")
     print(f"Thread: {thread}")
     return jsonify(fileName, thread.ident, file_counter)
 

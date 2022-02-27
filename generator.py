@@ -5,8 +5,10 @@ from openpyxl import Workbook
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.chart import BarChart, LineChart, Reference
 from openpyxl.styles import Alignment
+from openpyxl.writer.excel import save_virtual_workbook
 
 months_names = ["Januar", "Februar", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"]
+generated_files = list()
 
 def temperature_avg_std(df):
     temperature = df.iloc[:, 3]
@@ -402,5 +404,6 @@ def generate_excel_file(filename, generated_file_name, start_date, end_date, bas
             ws = wb.create_sheet('Dnevi-{}'.format(year))
             write_data_to_ws(daily_df, ws, year, 'daily', gdd, base_temp, tempGraph, rainGraph)
 
-    wb.save(f'{generated_file_name}.xlsx')
+    #wb.save('{}.xlsx'.format(generated_file_name))
+    generated_files.append(save_virtual_workbook(wb))
 

@@ -109,13 +109,14 @@ const FormContainer = () => {
 
         axios.post(baseURL+'/generate', reqData).then((response) => {
             let newFileName = response.data[0];
+            let threadId = response.data[1];
             let generatedFileName = response.data[2];
             console.log(response);
             
-            let intervalId = setInterval(checkForFile, 2000);
+            let intervalId = setInterval(checkForFile, 500);
 
             function checkForFile() {
-                axios.get(baseURL+'/check', { params: { fileId: generatedFileName } }).then(response =>  {
+                axios.get(baseURL+'/check', { params: { fileId: generatedFileName, threadId: threadId } }).then(response =>  {
                     console.log(response.data);
                     if (response.data == true){
                         donwloadTheFile(generatedFileName, newFileName);
