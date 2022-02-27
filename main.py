@@ -10,8 +10,8 @@ import threading
 import pandas as pd
 
 app = flask.Flask(__name__, static_url_path='/', static_folder='./app_public/build')
-app.config["DEBUG"] = True
-CORS(app)
+#app.config["DEBUG"] = True
+#CORS(app)
 
 threads = list()
 
