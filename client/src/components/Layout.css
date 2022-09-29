@@ -1,9 +1,10 @@
-.container{
+.background{
     background: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8) ), url('../../public/corn.jpeg') no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
     min-height: 100vh;
+    max-height: 100vh;
     opacity: 0.9;
 }

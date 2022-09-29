@@ -1,0 +1,51 @@
+.form-row {
+    padding-top: 20vh;
+}
+
+.form-col {
+    /* padding: 20px 20px 20px 20px; */
+    padding-bottom: 10px;
+    padding-top: 5px;
+    /* background-color: #333; */
+    border: 3px solid rgb(189, 189, 189);
+}
+
+.btn {
+    border-radius: 0px !important;
+    /* background-color: transparent !important; */
+    border-width: 2px !important;
+}
+
+.upload-btn {
+    margin-top: 4px;
+    display: inline;
+    width: 85%;
+}
+
+.delete-btn {
+    margin-top: 4px;
+    display: inline;
+    width: 10%;
+    margin-left: 5%;
+}
+
+.bi-trash {
+    margin-left: -1px;
+}
+
+input[type=date] {
+    border-radius: 0px !important;
+    padding-left: 20px !important;
+    padding-top: 10px !important;
+    background-color: transparent !important;
+    color: white !important;
+    border-width: 2px !important;
+}
+
+.spinner-border {
+    vertical-align: middle !important;
+    width: 1.3rem !important;
+    height: 1.3rem !important;
+    margin-right: 4px !important;
+    margin-bottom: 2px !important;
+}
