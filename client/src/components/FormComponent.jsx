@@ -11,17 +11,18 @@ import { useEffect } from 'react';
 const FormComponent = (props) => {
 
     const [file, setFile] = useState('');
-
-    useEffect(() => {
-
-    });
+    // ['', uploading, uploaded]
+    const [uploadStatus, setUploadStatus] = useState('');
 
     const handleFileChange = (e) => {
+        setUploadStatus('uploading');
         setFile(e.target.files[0]);
+        setUploadStatus('uploaded');
     };
 
     const handleReset = () => {
         setFile('');
+        setUploadStatus('');
     };
 
     return(
@@ -32,15 +33,15 @@ const FormComponent = (props) => {
                     <Form>
                         <Form.Group className="mb-3">
                             <input id='upload-hidden' type='file' accept='.csv' hidden onChange={(e) => {handleFileChange(e)}}/>
-                            <Button name='upload-btn' className='upload-btn' onClick={(e) => {document.getElementById('upload-hidden').click();}}>
-                                {/* Upload weather data */}
-                                {/* <div>
+                            <Button disabled={ file !== '' } name='upload-btn' className='upload-btn' onClick={(e) => {document.getElementById('upload-hidden').click();}}>
+                                <div hidden={uploadStatus !== ''}>Upload weather data</div>
+                                <div hidden={uploadStatus !== 'uploading'}>
                                     <div class="spinner-border" role="status">
                                         <span class="sr-only"></span>
                                     </div>
                                     Uploading...
-                                </div> */}
-                                <div>
+                                </div>
+                                <div hidden={uploadStatus !== 'uploaded'}>
                                     <i class="bi bi-check-lg"></i> Uploaded
                                 </div>
                             </Button>
