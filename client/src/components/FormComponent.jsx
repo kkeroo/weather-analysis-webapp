@@ -17,6 +17,12 @@ const FormComponent = (props) => {
     // ['', uploading, uploaded]
     const [uploadStatus, setUploadStatus] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [boundingDates, setBoundingDates] = useState({
+        startingDate: '',
+        endingDate: '',
+        startingDateYMD: '',
+        endingDateYMD: ''
+    });
 
     const uploadFileOnServer = (file) => {
         setUploadStatus('uploading');
@@ -28,8 +34,14 @@ const FormComponent = (props) => {
             url: "http://localhost:8000/",
             data: data
         }).then((response => {
-            console.log(response);
             setUploadStatus('uploaded');
+            setErrorMessage('');
+            setBoundingDates({
+                startingDate: response.data.starting_date,
+                endingDate: response.data.ending_date,
+                startingDateYMD: response.data.starting_date_ymd,
+                endingDateYMD: response.data.ending_date_ymd
+            });
         })).catch(error => {
             console.log(error);
             setErrorMessage("Error in uploading file to server.");
@@ -37,10 +49,8 @@ const FormComponent = (props) => {
     }
 
     const handleFileChange = (e) => {
-        // setUploadStatus('uploading');
         setFile(e.target.files[0]);
         uploadFileOnServer(e.target.files[0]);
-        // setUploadStatus('uploaded');
     };
 
     const handleReset = () => {
@@ -86,15 +96,15 @@ const FormComponent = (props) => {
                             <Row>
                                 <Form.Group as={Col}>
                                     <Form.Label className="text-light">Select starting date</Form.Label>
-                                    <Form.Control disabled={ file === '' } inline type="date" min="2020-06-01"></Form.Control>
+                                    <Form.Control disabled={ file === '' } inline type="date" value={boundingDates.startingDateYMD}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Form.Label className="text-light">Select ending date</Form.Label>
-                                    <Form.Control disabled={ file === '' } inline type="date" min="2020-06-01"></Form.Control>
+                                    <Form.Control disabled={ file === '' } inline type="date" value={boundingDates.endingDateYMD}></Form.Control>
                                 </Form.Group>
                             </Row>
                             <div className='text-center' hidden={ uploadStatus !== 'uploaded' }>
-                                <Form.Text>Available dates: 01.01.2020 - 31.12.2022</Form.Text>
+                                <Form.Text>Available dates: {boundingDates.startingDate} - {boundingDates.endingDate}</Form.Text>
                             </div>
                         </Form.Group>
 

@@ -22,7 +22,10 @@ def split_date(date):
     year = date[2]
     return day, month, year
 
-def create_date(day, month, year):
+def create_date(day, month, year, date_format):
+    if date_format == 'ymd':
+        date = '20' + year + '-' + month + '-' + day
+        return date
     date = day + '.' + month + '.' + '20' + year
     return date
 
@@ -40,13 +43,18 @@ async def create_file(file: UploadFile = File(...)):
     # first date
     raw_date = df.iloc[0,0]
     day, month, year = split_date(raw_date)
-    starting_date = create_date(day, month, year)
+    starting_date = create_date(day, month, year, 'dmy')
+    starting_date_ymd = create_date(day, month, year, 'ymd')
 
     #last date
     raw_date = df.iloc[-1,0]
     day, month, year = split_date(raw_date)
-    ending_date = create_date(day, month, year)
+    ending_date = create_date(day, month, year, 'dmy')
+    ending_date_ymd = create_date(day, month, year, 'ymd')
 
-    print(starting_date, ending_date)
-
-    return {"starting_date": starting_date, "ending_date": ending_date}
+    return {
+        "starting_date": starting_date,
+        "ending_date": ending_date,
+        "starting_date_ymd": starting_date_ymd,
+        "ending_date_ymd": ending_date_ymd
+    }
