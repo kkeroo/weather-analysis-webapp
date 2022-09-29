@@ -126,8 +126,18 @@ const FormComponent = (props) => {
             data: data
         }).then(response => {
             setGenerateStatus('generated');
+            setErrorMessage('');
         }).catch(error => {
+            setErrorMessage("Error in sending form data to server.");
         });
+    };
+
+    const downloadExcelFile = (jobId) => {
+        const link = document.createElement('a');
+        link.href = "http://localhost:8000/generate/"+jobId;
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
     };
 
     return(

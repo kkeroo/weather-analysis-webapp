@@ -19,7 +19,7 @@ services:
   
   worker:
     build: .
-    command: rq worker --with-scheduler --url redis://redis:6379
+    command: rq worker --with-scheduler --url redis://redis:6379 my_queue
     depends_on:
       - redis
     links:

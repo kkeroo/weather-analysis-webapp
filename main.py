@@ -1,7 +1,14 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 import pandas as pd
 import os
+from worker import generate
+from redis import Redis
+from rq import Queue, cancel_job
+from rq.job import Job
+from rq.command import send_stop_job_command
+import time
 
 app = FastAPI()
 
@@ -12,6 +19,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+redis_conn = Redis(host="redis", port=6379, db=0)
+q = Queue('my_queue', connection=redis_conn)
 
 def split_date(date):
     date = date.split(" ")[0]
@@ -26,6 +36,14 @@ def create_date(day, month, year, date_format):
         date = '20' + year + '-' + month + '-' + day
         return date
     date = day + '.' + month + '.' + '20' + year
+    return date
+
+def format_date(date):
+    date = date.split('-')
+    year = date[0]
+    month = date[1]
+    day = date[2]
+    date = day + '/' + month + '/' + year
     return date
 
 @app.get("/")
@@ -61,4 +79,14 @@ async def create_file(file: UploadFile = File(...)):
 @app.post("/generate")
 async def generate_file(base_temperature: str = Form(), starting_date: str = Form(), ending_date: str = Form(), file: UploadFile = File(...)):
     print(base_temperature, starting_date, ending_date, file.filename)
-    return {'temp': base_temperature}
+    df = pd.read_csv(file.file, sep=";")
+    sd = format_date(starting_date)
+    ed = format_date(ending_date)
+    bt = int(base_temperature)
+    job = q.enqueue(generate, args=(df, sd, ed, bt,))
+    return {'job': job.id}
+
+# @app.get("/generate")
+# async def get_file():
+#     headers = {'Content-Disposition': 'attachment; filename="Book.xlsx"'}
+#     return FileResponse(path="weatherstation_export.xlsx", headers=headers)
