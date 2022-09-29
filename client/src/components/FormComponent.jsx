@@ -54,7 +54,7 @@ const FormComponent = (props) => {
             console.log(error);
             setErrorMessage("Error in uploading file to server.");
         });
-    }
+    };
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -62,8 +62,7 @@ const FormComponent = (props) => {
     };
 
     const handleReset = () => {
-        setFile('');
-        setUploadStatus('');
+        document.location.reload();
     };
 
     const handleStartingDateChange = (e) => {
@@ -72,7 +71,28 @@ const FormComponent = (props) => {
     
     const handleEndingDateChange = (e) => {
         setSelectedDates(prevDates => ({...prevDates, endingDate: e.target.value}));
-    }
+    };
+
+    const checkDates = () => {
+        let sd = new Date(selectedDates.startingDate);
+        let ed = new Date(selectedDates.endingDate);
+
+        let minDate = new Date(boundingDates.startingDateYMD);
+        let maxDate = new Date(boundingDates.endingDateYMD);
+
+        if (sd > maxDate || sd < minDate) {
+            setErrorMessage("Please pick valid starting date between " + boundingDates.startingDate + " and " + boundingDates.endingDate + ".");
+        }
+        else if(ed > maxDate || ed < minDate) {
+            setErrorMessage("Please pick valid ending date between " + boundingDates.startingDate + " and " + boundingDates.endingDate + ".");
+        }
+        else if (sd > ed) {
+            setErrorMessage("Please pick dates in a way that starting date is before ending date.");
+        }
+        else {
+            setErrorMessage('');
+        }
+    };
 
     return(
         <Container>
@@ -125,7 +145,7 @@ const FormComponent = (props) => {
                         </Form.Group>
 
                         <Form.Group className='mt-3'>
-                            <Button disabled={ file === '' }>Generate file</Button>
+                            <Button disabled={ file === '' } onClick={() => {checkDates()}}>Generate file</Button>
                         </Form.Group>
 
                         <Form.Group className='mt-3' hidden={ errorMessage === '' }>
