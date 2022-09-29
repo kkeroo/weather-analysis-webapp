@@ -23,6 +23,10 @@ const FormComponent = (props) => {
         startingDateYMD: '',
         endingDateYMD: ''
     });
+    const [selectedDates, setSelectedDates] = useState({
+        startingDate: '',
+        endingDate: ''
+    });
 
     const uploadFileOnServer = (file) => {
         setUploadStatus('uploading');
@@ -42,6 +46,10 @@ const FormComponent = (props) => {
                 startingDateYMD: response.data.starting_date_ymd,
                 endingDateYMD: response.data.ending_date_ymd
             });
+            setSelectedDates({
+                startingDate: response.data.starting_date_ymd,
+                endingDate: response.data.ending_date_ymd
+            });
         })).catch(error => {
             console.log(error);
             setErrorMessage("Error in uploading file to server.");
@@ -57,6 +65,14 @@ const FormComponent = (props) => {
         setFile('');
         setUploadStatus('');
     };
+
+    const handleStartingDateChange = (e) => {
+        setSelectedDates(prevDates => ({...prevDates, startingDate: e.target.value}));
+    };
+    
+    const handleEndingDateChange = (e) => {
+        setSelectedDates(prevDates => ({...prevDates, endingDate: e.target.value}));
+    }
 
     return(
         <Container>
@@ -96,11 +112,11 @@ const FormComponent = (props) => {
                             <Row>
                                 <Form.Group as={Col}>
                                     <Form.Label className="text-light">Select starting date</Form.Label>
-                                    <Form.Control disabled={ file === '' } inline type="date" value={boundingDates.startingDateYMD}></Form.Control>
+                                    <Form.Control disabled={ file === '' } inline type="date" min={boundingDates.startingDateYMD} max={boundingDates.endingDateYMD} defaultValue={boundingDates.startingDateYMD} onChange={(e) => {handleStartingDateChange(e)}}></Form.Control>
                                 </Form.Group>
                                 <Form.Group as={Col}>
                                     <Form.Label className="text-light">Select ending date</Form.Label>
-                                    <Form.Control disabled={ file === '' } inline type="date" value={boundingDates.endingDateYMD}></Form.Control>
+                                    <Form.Control disabled={ file === '' } inline type="date" min={boundingDates.startingDateYMD} max={boundingDates.endingDateYMD} defaultValue={boundingDates.endingDateYMD} onChange={(e) => {handleEndingDateChange(e)}}></Form.Control>
                                 </Form.Group>
                             </Row>
                             <div className='text-center' hidden={ uploadStatus !== 'uploaded' }>
