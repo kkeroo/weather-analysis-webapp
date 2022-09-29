@@ -6,8 +6,10 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 
 import './FormComponent.css';
+
 import { useState } from 'react';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const FormComponent = (props) => {
 
@@ -16,10 +18,29 @@ const FormComponent = (props) => {
     const [uploadStatus, setUploadStatus] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const handleFileChange = (e) => {
+    const uploadFileOnServer = (file) => {
         setUploadStatus('uploading');
+        let data = new FormData();
+        data.append('file', file);
+
+        axios({
+            method: "POST",
+            url: "http://localhost:8000/",
+            data: data
+        }).then((response => {
+            console.log(response);
+            setUploadStatus('uploaded');
+        })).catch(error => {
+            console.log(error);
+            setErrorMessage("Error in uploading file to server.");
+        });
+    }
+
+    const handleFileChange = (e) => {
+        // setUploadStatus('uploading');
         setFile(e.target.files[0]);
-        setUploadStatus('uploaded');
+        uploadFileOnServer(e.target.files[0]);
+        // setUploadStatus('uploaded');
     };
 
     const handleReset = () => {
