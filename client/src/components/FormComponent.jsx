@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 
 import './FormComponent.css';
 import { useState } from 'react';
@@ -13,6 +14,7 @@ const FormComponent = (props) => {
     const [file, setFile] = useState('');
     // ['', uploading, uploaded]
     const [uploadStatus, setUploadStatus] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleFileChange = (e) => {
         setUploadStatus('uploading');
@@ -70,10 +72,17 @@ const FormComponent = (props) => {
                                     <Form.Control disabled={ file === '' } inline type="date" min="2020-06-01"></Form.Control>
                                 </Form.Group>
                             </Row>
+                            <div className='text-center' hidden={ uploadStatus !== 'uploaded' }>
+                                <Form.Text>Available dates: 01.01.2020 - 31.12.2022</Form.Text>
+                            </div>
                         </Form.Group>
 
                         <Form.Group className='mt-3'>
                             <Button disabled={ file === '' }>Generate file</Button>
+                        </Form.Group>
+
+                        <Form.Group className='mt-3' hidden={ errorMessage === '' }>
+                            <Alert variant="danger">{errorMessage}</Alert>
                         </Form.Group>
                     </Form>
                 </Col>
