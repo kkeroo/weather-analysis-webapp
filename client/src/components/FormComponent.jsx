@@ -16,6 +16,8 @@ const FormComponent = (props) => {
     const [file, setFile] = useState('');
     // ['', uploading, uploaded]
     const [uploadStatus, setUploadStatus] = useState('');
+    // ['', generating, generated]
+    const [generateStatus, setGenerateStatus] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [boundingDates, setBoundingDates] = useState({
         startingDate: '',
@@ -97,10 +99,35 @@ const FormComponent = (props) => {
             setErrorMessage("Please select base temperature for GDD calculation.");
             return false;
         }
+        else if (file === '') {
+            setErrorMessage("Please upload file with weather data");
+            return false;
+        }
         else {
             setErrorMessage('');
             return true;
         }
+    };
+
+    const handleGenerateFile = () => {
+        if (!validateForm()) {
+            return;
+        }
+        setGenerateStatus('generating');
+        let data = new FormData();
+        data.append('file', file);
+        data.append('base_temperature', baseTemperature);
+        data.append('starting_date', selectedDates.startingDate);
+        data.append('ending_date', selectedDates.endingDate);
+
+        axios({
+            method: "POST",
+            url: "http://localhost:8000/generate",
+            data: data
+        }).then(response => {
+            setGenerateStatus('generated');
+        }).catch(error => {
+        });
     };
 
     return(
@@ -154,7 +181,7 @@ const FormComponent = (props) => {
                         </Form.Group>
 
                         <Form.Group className='mt-3'>
-                            <Button disabled={ file === '' } onClick={() => {validateForm()}}>Generate file</Button>
+                            <Button disabled={ file === '' } onClick={() => {handleGenerateFile()}}>Generate file</Button>
                         </Form.Group>
 
                         <Form.Group className='mt-3' hidden={ errorMessage === '' }>

@@ -1,5 +1,4 @@
-from calendar import month
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import os
@@ -58,3 +57,8 @@ async def create_file(file: UploadFile = File(...)):
         "starting_date_ymd": starting_date_ymd,
         "ending_date_ymd": ending_date_ymd
     }
+
+@app.post("/generate")
+async def generate_file(base_temperature: str = Form(), starting_date: str = Form(), ending_date: str = Form(), file: UploadFile = File(...)):
+    print(base_temperature, starting_date, ending_date, file.filename)
+    return {'temp': base_temperature}
