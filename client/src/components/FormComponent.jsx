@@ -27,6 +27,7 @@ const FormComponent = (props) => {
         startingDate: '',
         endingDate: ''
     });
+    const [baseTemperature, setBaseTemperature] = useState(0);
 
     const uploadFileOnServer = (file) => {
         setUploadStatus('uploading');
@@ -73,7 +74,7 @@ const FormComponent = (props) => {
         setSelectedDates(prevDates => ({...prevDates, endingDate: e.target.value}));
     };
 
-    const checkDates = () => {
+    const validateForm = () => {
         let sd = new Date(selectedDates.startingDate);
         let ed = new Date(selectedDates.endingDate);
 
@@ -82,15 +83,23 @@ const FormComponent = (props) => {
 
         if (sd > maxDate || sd < minDate) {
             setErrorMessage("Please pick valid starting date between " + boundingDates.startingDate + " and " + boundingDates.endingDate + ".");
+            return false;
         }
         else if(ed > maxDate || ed < minDate) {
             setErrorMessage("Please pick valid ending date between " + boundingDates.startingDate + " and " + boundingDates.endingDate + ".");
+            return false;
         }
         else if (sd > ed) {
             setErrorMessage("Please pick dates in a way that starting date is before ending date.");
+            return false;
+        }
+        else if (baseTemperature == 0) {
+            setErrorMessage("Please select base temperature for GDD calculation.");
+            return false;
         }
         else {
             setErrorMessage('');
+            return true;
         }
     };
 
@@ -122,9 +131,9 @@ const FormComponent = (props) => {
                         <Form.Group className="mb-3">
                             <Form.Label className="text-light">Select base temperature for GDD</Form.Label>
                             <Form.Group className="text-center">
-                                <Form.Check disabled={ file === '' } name="base_temperature" inline type="radio" label="5°C" className='text-light'></Form.Check>
-                                <Form.Check disabled={ file === '' } name="base_temperature" inline type="radio" label="8°C" className='text-light ms-4'></Form.Check>
-                                <Form.Check disabled={ file === '' } name="base_temperature" inline type="radio" label="10°C" className='text-light ms-4'></Form.Check>
+                                <Form.Check disabled={ file === '' } name="base_temperature" inline type="radio" value="5" label="5°C" className='text-light' onChange={(e) => {setBaseTemperature(e.target.value)}} ></Form.Check>
+                                <Form.Check disabled={ file === '' } name="base_temperature" inline type="radio" value="8" label="8°C" className='text-light ms-4' onChange={(e) => {setBaseTemperature(e.target.value)}}></Form.Check>
+                                <Form.Check disabled={ file === '' } name="base_temperature" inline type="radio" value="10" label="10°C" className='text-light ms-4' onChange={(e) => {setBaseTemperature(e.target.value)}}></Form.Check>
                             </Form.Group>
                         </Form.Group>
 
@@ -145,7 +154,7 @@ const FormComponent = (props) => {
                         </Form.Group>
 
                         <Form.Group className='mt-3'>
-                            <Button disabled={ file === '' } onClick={() => {checkDates()}}>Generate file</Button>
+                            <Button disabled={ file === '' } onClick={() => {validateForm()}}>Generate file</Button>
                         </Form.Group>
 
                         <Form.Group className='mt-3' hidden={ errorMessage === '' }>
