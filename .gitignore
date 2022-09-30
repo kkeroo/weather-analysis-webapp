@@ -18,3 +18,5 @@ lib/
 pyvenv.cfg
 
 .DS_Store
+
+files/*

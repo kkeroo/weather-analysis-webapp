@@ -5,6 +5,7 @@ from openpyxl import Workbook
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from openpyxl.chart import BarChart, LineChart, Reference
 from openpyxl.styles import Alignment
+import os
 
 months_names = ["Januar", "Februar", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"]
 
@@ -452,7 +453,7 @@ def crop_date_range(dataframe, start_date, end_date):
 
     return df
 
-def generate(df, start_date, end_date, base_temp):
+def generate(df, filename, start_date, end_date, base_temp):
     dataframe = df
     # Timestamp
     timestamp_col = dataframe.iloc[:, 1]
@@ -521,8 +522,8 @@ def generate(df, start_date, end_date, base_temp):
         ws = wb.create_sheet('Dnevi-{}'.format(year))
         write_data_to_ws(daily_df, ws, year, 'daily', gdd, base_temp, data_info=daily_data_info)
 
-    # wb.save(f'{filename}.xlsx')
-    return 2
+    wb.save(f'files/{filename}.xlsx')
+    return filename
 
 if __name__ == "__main__":
     generate('weatherstation_export.csv', '1/1/2021', '31/12/2021', 8)

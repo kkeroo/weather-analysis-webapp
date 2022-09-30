@@ -78,15 +78,31 @@ async def create_file(file: UploadFile = File(...)):
 
 @app.post("/generate")
 async def generate_file(base_temperature: str = Form(), starting_date: str = Form(), ending_date: str = Form(), file: UploadFile = File(...)):
+    filename, ext = os.path.splitext(file.filename)
+    if ext != ".csv":
+        return {'error': 'Wrong file type.'}
+    
     print(base_temperature, starting_date, ending_date, file.filename)
     df = pd.read_csv(file.file, sep=";")
     sd = format_date(starting_date)
     ed = format_date(ending_date)
     bt = int(base_temperature)
-    job = q.enqueue(generate, args=(df, sd, ed, bt,))
+    job = q.enqueue(generate, args=(df, filename, sd, ed, bt,))
     return {'job': job.id}
 
-# @app.get("/generate")
-# async def get_file():
-#     headers = {'Content-Disposition': 'attachment; filename="Book.xlsx"'}
-#     return FileResponse(path="weatherstation_export.xlsx", headers=headers)
+@app.get("/generate/{job_id}")
+async def get_job_status(job_id):
+    filename = None
+    try:
+        job = Job.fetch(job_id, connection=redis_conn)
+        if job.get_status() != "finished":
+            return {"job_status": job.get_status()}
+        else:
+            filename = job.result
+    except:
+        return{"job_status": "no job found"}
+    
+    if not filename == None:
+        headers = {'Content-Disposition': 'attachment; filename="' + filename + '.xlsx"'}
+        return FileResponse(path=f"files/{filename}.xlsx", headers=headers)
+
