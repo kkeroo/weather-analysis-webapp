@@ -11,6 +11,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
 
+import { useInterval } from '../hooks/useInterval';
+
 const FormComponent = (props) => {
 
     const [file, setFile] = useState('');
@@ -30,6 +32,33 @@ const FormComponent = (props) => {
         endingDate: ''
     });
     const [baseTemperature, setBaseTemperature] = useState(0);
+    const [jobId, setJobId] = useState(0);
+    const delay = 1000;
+    const [pooling, setPooling] = useState(false);
+
+    useInterval(() => {
+        if (jobId == 0) return;
+        axios({
+            method: "GET",
+            url: "http://localhost:8000/generate/"+jobId,
+        }).then(response => {
+            console.log(response);
+            if (response.data.job_status == "finished") {
+                setPooling(false);
+                getFileFromServer(response.data.filename);
+                setGenerateStatus("generated");
+            }
+        })
+    }, pooling ? delay : null);
+
+    const getFileFromServer = (filename) => {
+        const link = document.createElement('a');
+        link.href = "http://localhost:8000/files/"+filename;
+        link.download = filename + '.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+    }
 
     const uploadFileOnServer = (file) => {
         setUploadStatus('uploading');
@@ -125,19 +154,12 @@ const FormComponent = (props) => {
             url: "http://localhost:8000/generate",
             data: data
         }).then(response => {
-            setGenerateStatus('generated');
+            setJobId(response.data.job);
             setErrorMessage('');
+            setPooling(true);
         }).catch(error => {
             setErrorMessage("Error in sending form data to server.");
         });
-    };
-
-    const downloadExcelFile = (jobId) => {
-        const link = document.createElement('a');
-        link.href = "http://localhost:8000/generate/"+jobId;
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
     };
 
     return(
@@ -191,7 +213,18 @@ const FormComponent = (props) => {
                         </Form.Group>
 
                         <Form.Group className='mt-3'>
-                            <Button disabled={ file === '' } onClick={() => {handleGenerateFile()}}>Generate file</Button>
+                            <Button disabled={ file === '' || generateStatus !== '' } onClick={() => {handleGenerateFile()}}>
+                                <div hidden={generateStatus !== ''}>Generate excel file</div>
+                                <div hidden={generateStatus !== 'generating'}>
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only"></span>
+                                    </div>
+                                    Generating...
+                                </div>
+                                <div hidden={generateStatus !== 'generated'}>
+                                    <i class="bi bi-check-lg"></i> Generated
+                                </div>
+                            </Button>
                         </Form.Group>
 
                         <Form.Group className='mt-3' hidden={ errorMessage === '' }>

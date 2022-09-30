@@ -99,10 +99,11 @@ async def get_job_status(job_id):
             return {"job_status": job.get_status()}
         else:
             filename = job.result
+            return {"job_status": job.get_status(), "filename": filename}
     except:
         return{"job_status": "no job found"}
     
-    if not filename == None:
-        headers = {'Content-Disposition': 'attachment; filename="' + filename + '.xlsx"'}
-        return FileResponse(path=f"files/{filename}.xlsx", headers=headers)
-
+@app.get("/files/{filename}")
+async def get_file(filename):
+    headers = {'Content-Disposition': 'attachment; filename="' + filename + '.xlsx"'}
+    return FileResponse(path=f"files/{filename}.xlsx", headers=headers)
