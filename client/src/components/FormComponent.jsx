@@ -40,7 +40,7 @@ const FormComponent = (props) => {
         if (jobId == 0) return;
         axios({
             method: "GET",
-            url: "http://localhost:8000/generate/"+jobId,
+            url: "/generate/"+jobId,
         }).then(response => {
             console.log(response);
             if (response.data.job_status == "finished") {
@@ -53,7 +53,7 @@ const FormComponent = (props) => {
 
     const getFileFromServer = (filename) => {
         const link = document.createElement('a');
-        link.href = "http://localhost:8000/files/"+filename;
+        link.href = "/files/"+filename;
         link.download = filename + '.xlsx';
         document.body.appendChild(link);
         link.click();
@@ -67,7 +67,7 @@ const FormComponent = (props) => {
 
         axios({
             method: "POST",
-            url: "http://localhost:8000/",
+            url: "/",
             data: data
         }).then((response => {
             setUploadStatus('uploaded');
@@ -151,7 +151,7 @@ const FormComponent = (props) => {
 
         axios({
             method: "POST",
-            url: "http://localhost:8000/generate",
+            url: "/generate",
             data: data
         }).then(response => {
             setJobId(response.data.job);

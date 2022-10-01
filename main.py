@@ -1,14 +1,13 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 import pandas as pd
 import os
 from worker import generate
 from redis import Redis
-from rq import Queue, cancel_job
+from rq import Queue
 from rq.job import Job
-from rq.command import send_stop_job_command
-import time
 
 app = FastAPI()
 
@@ -48,7 +47,7 @@ def format_date(date):
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return FileResponse(f'client/build/index.html', media_type='text/html')
 
 @app.post("/")
 async def create_file(file: UploadFile = File(...)):
@@ -107,3 +106,5 @@ async def get_job_status(job_id):
 async def get_file(filename):
     headers = {'Content-Disposition': 'attachment; filename="' + filename + '.xlsx"'}
     return FileResponse(path=f"files/{filename}.xlsx", headers=headers)
+
+app.mount("/", StaticFiles(directory="client/build/", html=True), name="static")
